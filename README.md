@@ -26,6 +26,11 @@ Open source discord bot Astro project
     This way we could use old Astro and new at the same time to make the transition smooth.
     Only downside would be lack of shared database.
 
+## Embed
+    Embeds are a big part of discord applications. It allows to reply with fancy response instead of plain text.
+
+    To create embed refer to discord.js docs on EmbedBuilders
+
 ## Additional info
 
     Psn api key is obtained by entering ``https://ca.account.sony.com/api/v1/ssocookie`` while being logged into sony services.

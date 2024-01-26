@@ -1,26 +1,21 @@
-const handleCommands = async (interaction, client) => {
+const { getAvatar } = require("./account")
+
+export const handleCommands = async (interaction, client) => {
+    // most commands would require interaction to be passed so they can respond and client to do stuff
+
     switch(interaction.commandName) {
-
-/* TEMPLATE for commands
-        case '<COMMAND NAME>':
-            <CALL COMMAND FUNCTION>
-            break 
-
-
-*/
-        case '':
+        case 'avatar':
+            getAvatar(interaction, client)
             break
         default:
             break
     }
 }
 
-const handleInlineCommands = async (msg, clieant) => {
+export const handleInlineCommands = async (msg, clieant) => {
     const c = msg.content
 
     if(c.startsWith('<COMMAND>')) {
 
     }
 }
-
-module.exports = { handleCommands, handleInlineCommands }
