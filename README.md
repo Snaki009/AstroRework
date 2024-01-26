@@ -14,8 +14,18 @@ Open source discord bot Astro project
 
 ## Key concepts
 
+    Discord api works using events. When something happens we can react to it using .on to listen and attach function to specific events.
 
+    Most important being 
+    1. interactionCreate - which allows to take action for slash commands
+    2. messageCreate - to listen for any message created
+
+    Multi-server bots cant react to messages but we are not limited to it.
 
 ## Additional info
 
-    
+    Psn api key is obtained by entering ``https://ca.account.sony.com/api/v1/ssocookie`` while being logged into sony services.
+    You can use your own account which will cause bot to have access to your data and friends but it will have to be reset (almost) every time when you log in.
+    With additional account that doesn't log in - it doesn't change for a long time but we should check if it's valid from time to time.
+
+
