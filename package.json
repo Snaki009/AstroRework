@@ -2,5 +2,8 @@
   "dependencies": {
     "discord.js": "^14.14.1",
     "psn-api": "^2.10.1"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
