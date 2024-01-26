@@ -22,6 +22,10 @@ Open source discord bot Astro project
 
     Multi-server bots cant react to messages but we are not limited to it.
 
+    Several apps can use the same bot token so they can all respond to same events using one bot. 
+    This way we could use old Astro and new at the same time to make the transition smooth.
+    Only downside would be lack of shared database.
+
 ## Additional info
 
     Psn api key is obtained by entering ``https://ca.account.sony.com/api/v1/ssocookie`` while being logged into sony services.
