@@ -1,4 +1,4 @@
-const { getAvatar } = require("./account")
+import { getAvatar } from "./account/index.js"
 
 export const handleCommands = async (interaction, client) => {
     // most commands would require interaction to be passed so they can respond and client to do stuff

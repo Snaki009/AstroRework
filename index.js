@@ -1,9 +1,10 @@
-import psn from 'psn-api'
+// import psn from 'psn-api'
 import Discord from 'discord.js'
-import { handleCommands } from './commands'
-import registerCommands from './helpers/registerCommands'
+import { handleCommands } from './commands/index.js'
+import { registerCommands } from './helpers/registerCommands.js'
+import intents from './config/init/intents.js'
 
-const token = 123 //discord
+const token = 'TOKEN' //discord
 const npsso = 456 //psn
 
 const client = new Discord.Client({ intents })
