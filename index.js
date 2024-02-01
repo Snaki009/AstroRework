@@ -1,10 +1,13 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 // import psn from 'psn-api'
 import Discord from 'discord.js'
 import { handleCommands } from './commands/index.js'
 import { registerCommands } from './helpers/registerCommands.js'
 import intents from './config/init/intents.js'
 
-const token = 'TOKEN' //discord
+const token = process.env.discord_token;
 const npsso = 456 //psn
 
 const client = new Discord.Client({ intents })
@@ -18,11 +21,10 @@ const client = new Discord.Client({ intents })
 
 
 // GENERAL TODO:
-// 0. Env variables for secrets and tokens
-// 1. DB handling
-// 2. Connect
-// 3. Better logs than console.logs
-// 4. Web UI
+// 0. DB handling
+// 1. Connect
+// 2. Better logs than console.logs
+// 3. Web UI
 
 // Fired on bot start once
 // TODO:
