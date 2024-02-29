@@ -11,8 +11,8 @@ import { UserModel } from './db/user.js'
 import startServer from './webServer/index.js'
 
 const token = process.env.discord_token;
-const npsso = 456 //psn
-const mongoDB = process.env.mongo+"/astroDB";
+const npsso = process.env.psn_token //psn
+const mongoDB = process.env.mongo+"astroDB";
 
 const client = new Discord.Client({ intents })
 mongoose.set("strictQuery", false);
