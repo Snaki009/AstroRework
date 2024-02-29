@@ -1,7 +1,7 @@
-import commandsList from '../config/init/commandsList'
-import serverConsts from '../config/serverConfig'
+import commandsList from '../config/init/commandsList.js'
+import serverConsts from '../config/serverConfig.js'
 
-const registerCommands = (client) => {
+export const registerCommands = (client) => {
     const guild = client.guilds.cache.get(serverConsts.guildId)
     const commands = guild ? guild.commands : client.application.commands
 
@@ -10,5 +10,3 @@ const registerCommands = (client) => {
         commands.create(command)
     )
 }
-
-export default registerCommands

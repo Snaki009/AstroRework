@@ -18,6 +18,10 @@ const commandsList = [
                 type: ApplicationCommandOptionType.Boolean,
             },
         ]
+    },
+    {
+        name: 'connect',
+        description: 'Połącz profil'
     }
 ]
 

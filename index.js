@@ -1,12 +1,27 @@
-import psn from 'psn-api'
-import Discord from 'discord.js'
-import { handleCommands } from './commands'
-import registerCommands from './helpers/registerCommands'
+import dotenv from 'dotenv';
+dotenv.config();
 
-const token = 123 //discord
+// import psn from 'psn-api'
+import Discord from 'discord.js'
+import { handleCommands } from './commands/index.js'
+import { registerCommands } from './helpers/registerCommands.js'
+import intents from './config/init/intents.js'
+import mongoose from 'mongoose'
+import { UserModel } from './db/user.js'
+import startServer from './webServer/index.js'
+
+const token = process.env.discord_token;
 const npsso = 456 //psn
+const mongoDB = process.env.mongo+"/astroDB";
 
 const client = new Discord.Client({ intents })
+mongoose.set("strictQuery", false);
+
+try {
+    await mongoose.connect(mongoDB)
+} catch (err) {
+    console.log('There was an error connecting to db', err)
+}
 
 // GENERAL INFO
 // client      - bot instance
@@ -17,11 +32,10 @@ const client = new Discord.Client({ intents })
 
 
 // GENERAL TODO:
-// 0. Env variables for secrets and tokens
-// 1. DB handling
-// 2. Connect
-// 3. Better logs than console.logs
-// 4. Web UI
+// 0. DB handling
+// 1. Connect
+// 2. Better logs than console.logs
+// 3. Web UI
 
 // Fired on bot start once
 // TODO:
@@ -33,6 +47,17 @@ const client = new Discord.Client({ intents })
 client.once('ready', async () => {
     console.log(`Logged in!`)
 
+    // Example db usage
+    // try {
+    //     const user = new UserModel({id: '123', psn: 'test'})
+    //     await user.save()
+        
+    // } catch (err) {
+    //     console.log('Create failed')
+    // }
+    const test = await UserModel.find({id: '123'}).exec()
+    console.log(test)
+    
     registerCommands(client)
 })
 
@@ -135,3 +160,4 @@ client.on("guildMemberRemove", (member) => {
 
 // Function to connect bot to  discord
 client.login(token).catch(e => console.error(e));
+startServer();

@@ -1,4 +1,5 @@
-const { getAvatar } = require("./account")
+import { getAvatar } from "./account/index.js"
+import { connect } from "./connect/index.js"
 
 export const handleCommands = async (interaction, client) => {
     // most commands would require interaction to be passed so they can respond and client to do stuff
@@ -6,6 +7,9 @@ export const handleCommands = async (interaction, client) => {
     switch(interaction.commandName) {
         case 'avatar':
             getAvatar(interaction, client)
+            break
+        case 'connect':
+            connect(interaction)
             break
         default:
             break
