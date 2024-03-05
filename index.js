@@ -9,6 +9,8 @@ import intents from './config/init/intents.js';
 import mongoose from 'mongoose';
 import { UserModel } from './db/user.js';
 import startServer from './webServer/index.js';
+import { logger }  from './logger.js';
+
 
 const token = process.env.discord_token;
 const npsso = process.env.psn_token; //psn
@@ -20,7 +22,7 @@ mongoose.set('strictQuery', false);
 try {
   await mongoose.connect(mongoDB);
 } catch (err) {
-  console.log('There was an error connecting to db', err);
+  logger.error('There was an error connecting to db', err);
 }
 
 // GENERAL INFO
@@ -43,7 +45,7 @@ try {
 // 4. Add bot statsus
 // 5. When registerCommands adds too many commands later ones arent addded, also this slows down startup so try to add something to check if its already added
 client.once('ready', async () => {
-  console.log(`Logged in!`);
+  logger.info(`Logged in!`);
 
   // Example db usage
   // try {
@@ -98,7 +100,7 @@ client.on('interactionCreate', async (interaction) => {
     await interaction.deferReply();
     await handleCommands(interaction, client);
   } catch (err) {
-    console.log(err);
+    logger.error(err);
   }
 });
 
@@ -136,5 +138,5 @@ client.on('guildMemberAdd', (member) => {});
 client.on('guildMemberRemove', (member) => {});
 
 // Function to connect bot to  discord
-client.login(token).catch((e) => console.error(e));
+client.login(token).catch((e) => logger.error(e));
 startServer();

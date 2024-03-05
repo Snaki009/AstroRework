@@ -1,6 +1,6 @@
 import { EmbedBuilder } from '@discordjs/builders';
-import { getGuild } from '../../helpers/registerCommands';
-import UserInfoEmbed from './UserInfoEmbed';
+import { getGuild } from '../../helpers/registerCommands.js';
+import UserInfoEmbed from './UserInfoEmbed.js';
 
 export const getAvatar = async (interaction, client) => {
   const user = interaction.options.getUser('user') || interaction.user;
