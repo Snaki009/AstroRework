@@ -8,8 +8,8 @@ import { registerCommands } from './helpers/index.js';
 import mongoose from 'mongoose';
 import { UserModel } from './db/user.js';
 import startServer from './webServer/index.js';
-import { logger }  from './logger.js';
-
+import { logger } from './logger.js';
+import intents from './config/init/intents.js';
 
 const token = process.env.discord_token;
 const npsso = process.env.psn_token; //psn
