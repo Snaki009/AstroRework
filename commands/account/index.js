@@ -18,7 +18,7 @@ export const getAvatar = async (interaction, client) => {
         : me.displayAvatarURL({ size: 1024, dynamic: true }),
     );
 
-  interaction.editReply({ embeds: [embed] }).catch((err) => console.log(err));
+  interaction.editReply({ embeds: [embed] }).catch((err) => logger.error('Failed to send avatar', err));
 };
 
 export const getUserInfo = async (interaction, client) => {
@@ -30,8 +30,10 @@ export const getUserInfo = async (interaction, client) => {
   try {
     member = await guild.members.fetch(user.id);
   } catch (err) {
-    console.log('No such ');
+    logger.error('No such user');
   }
 
-  interaction.editReply({ embeds: [UserInfoEmbed(user, member)] }).catch((err) => console.log(err));
+  interaction
+    .editReply({ embeds: [UserInfoEmbed(user, member)] })
+    .catch((err) => logger.error('Failed to send getUserInfo', err));
 };

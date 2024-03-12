@@ -2,7 +2,6 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import serverConsts from '../../config/serverConfig.js';
 
 export const connect = async (interaction) => {
-  console.log(serverConsts);
   const authButton = new ButtonBuilder()
     .setLabel('Połącz profil')
     .setURL(serverConsts.connectUrl)
@@ -13,5 +12,5 @@ export const connect = async (interaction) => {
       content: `Pamiętaj połaczyć PSN z Discordem!`,
       components: [new ActionRowBuilder().addComponents(authButton)],
     })
-    .catch((err) => console.log(err));
+    .catch((err) => logger.error('Failed to connect user', err));
 };

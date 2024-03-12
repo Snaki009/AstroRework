@@ -3,13 +3,15 @@ dotenv.config();
 
 // import psn from 'psn-api'
 import Discord from 'discord.js';
-import { handleCommands } from './commands/index.js';
+import { handleCommands, handleInlineCommands } from './commands/index.js';
 import { registerCommands } from './helpers/index.js';
 import mongoose from 'mongoose';
 import { UserModel } from './db/user.js';
 import startServer from './webServer/index.js';
 import { logger } from './logger.js';
 import intents from './config/init/intents.js';
+import { onMessageFunctions } from './passiveFunctions/index.js';
+import serverConsts from './config/serverConfig.js';
 
 const token = process.env.discord_token;
 const npsso = process.env.psn_token; //psn
@@ -80,9 +82,24 @@ client.on('messageReactionAdd', async (reaction, user) => {});
 client.on('messageReactionRemove', async (reaction, user) => {});
 
 // User related changes, ex. username or role update
-// TODO:
-// 1. Username change detection to admin channel
-client.on('guildMemberUpdate', (oldMember, newMember) => {});
+client.on('guildMemberUpdate', (oldMember, newMember) => {
+  if (oldMember.nickname !== newMember.nickname) {
+    client.channels.cache
+      .get(serverConsts.updateChannel)
+      .send(
+        `<@${oldMember.user.id}> zmienił nick. Był ${
+          oldMember.nickname ? oldMember.nickname : oldMember.user.username
+        } Od teraz ${newMember.nickname ? newMember.nickname : newMember.user.username}`,
+      )
+      .catch((err) => logger.error('Failed to send change nick msg', err));
+  }
+  if (oldMember.user.username !== newMember.user.username) {
+    client.channels.cache
+      .get(serverConsts.updateChannel)
+      .send(`<@${oldMember.user.id}> zmienił nick. Był ${oldMember.user.username} Od teraz ${newMember.user.username}`)
+      .catch((err) => logger.error('Failed to send change nick message', err));
+  }
+});
 
 // Detects user status changes, ex. current game
 // TODO:
@@ -105,37 +122,91 @@ client.on('interactionCreate', async (interaction) => {
 
 // Creating messages not related to commands
 // TODO:
-// 1. Inline commands
 // 2. Ban patterns - forbidden words
 // 3. Moving messages
 // 4. Exp
 // 5. Mute admins
-client.on('messageCreate', async (msg) => {});
+client.on('messageCreate', async (msg) => {
+  handleInlineCommands(msg, client);
+  onMessageFunctions(msg, client);
+});
 
-// On message delete (self explainatory)
-// TODO:
-// 1. Send deleted message to admin channel
-client.on('messageDelete', (deletedMsg) => {});
+// On message delete - send that message to updateChannel
+client.on('messageDelete', (deletedMsg) => {
+  const message = deletedMsg.content
+    ? deletedMsg.content.length > 1024
+      ? deletedMsg.content.substring(0, 1024)
+      : deletedMsg.content
+    : '-';
+
+  const files =
+    deletedMsg.attachments &&
+    Array.from(deletedMsg.attachments).map(([key, value], i) => ({ attachment: value.url, name: `${value.url}` }));
+
+  const embeds = [
+    new Discord.EmbedBuilder()
+      .setColor('#ff0000')
+      .setTitle(deletedMsg.author.username || '-')
+      .setDescription(`<#${deletedMsg.channel.id}>`)
+      .addFields({ name: 'Deleted msg:', value: message }),
+  ];
+
+  client.channels.cache
+    .get(serverConsts.updateChannel)
+    .send({ embeds, files })
+    .catch((err) => logger.error('Failed to log deleted message', err));
+});
 
 // On message edit
 // TODO:
-// 1. Send changed message to admin channel\
 // 2. Add banned words mechanism to prevent exploits
-client.on('messageUpdate', async (prevMsg, newMsg) => {});
+client.on('messageUpdate', async (prevMsg, newMsg) => {
+  const pMessage = prevMsg.content
+    ? prevMsg.content.length > 1024
+      ? prevMsg.content.substring(0, 1024)
+      : prevMsg.content
+    : '-';
+
+  const nMessage = newMsg.content
+    ? newMsg.content.length > 1024
+      ? newMsg.content.substring(0, 1024)
+      : newMsg.content
+    : '-';
+
+  client.channels.cache
+    .get(serverConsts.updateChannel)
+    .send({
+      embeds: [
+        new Discord.EmbedBuilder()
+          .setColor('#EACE09')
+          .setTitle(newMsg.author.username)
+          .setDescription(`<#${newMsg.channel.id}>`)
+          .addFields({ name: 'Old Msg', value: pMessage }, { name: 'New Msg', value: nMessage }),
+      ],
+    })
+    .catch((err) => logger.error('Failed to send update msg', err));
+});
 
 // When new member enters
 // TODO:
 // 1. Welcome
-// 2. Add [not connected] role
 // 3. Add entry to warn records
-client.on('guildMemberAdd', (member) => {});
+client.on('guildMemberAdd', (member) => {
+  updateRole('add', member.id, 'Niepołączony', client, member.guild.id);
+});
 
 // When member leaves
 // TODO:
-// 1. Say goodbye
+// 1. Inform that the user was banned (not provided by discord, needs warn records)
 // 2. Add entry to warn records
-client.on('guildMemberRemove', (member) => {});
+client.on('guildMemberRemove', (member) => {
+  client.channels.cache
+    .get(serverConsts.leaveChannel)
+    .send(`Użytkownik ${member.user.username} od nas odszedł... :(`)
+    .catch((err) => logger.error('Failed to say goodbye', err));
+});
 
 // Function to connect bot to  discord
 client.login(token).catch((e) => logger.error(e));
+// run webserver - GUI in the future, connect function handling
 startServer();

@@ -1,5 +1,6 @@
 // const req = require("express/lib/request")
 import express from 'express';
+import { logger } from '../logger.js';
 
 const server = express();
 const client_id = process.env.clientId;
@@ -44,7 +45,7 @@ server.all('/connect', async (req, res) => {
     const user = userData.find((entry) => entry.type === 'playstation');
 
     if (user) {
-      console.log(userInfo, userInfo.id, user.name);
+      console.info('Connect user: ', userInfo, userInfo.id, user.name);
       res.send(
         `Pomyślnie połączono ${userInfo.username} z ${user.name}, możesz korzystać z funkcji astro, zacznij od '/update' aby dostać rangę poziomu`,
       );
@@ -53,7 +54,7 @@ server.all('/connect', async (req, res) => {
         const userModel = new UserModel({ id: userInfo.id, psn: user.name });
         await userModel.save();
       } catch (err) {
-        console.log('mongo err');
+        logger.error('mongo err');
         res.send('Użytkownik już połączony, pierw rozłącz');
       }
     } else {
@@ -66,7 +67,7 @@ server.all('/connect', async (req, res) => {
 
 const startServer = () => {
   server.listen(3000, () => {
-    console.log('Server is ready.');
+    logger.info('Server is ready.');
   });
 };
 
