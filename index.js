@@ -4,8 +4,7 @@ dotenv.config();
 // import psn from 'psn-api'
 import Discord from 'discord.js';
 import { handleCommands } from './commands/index.js';
-import { registerCommands } from './helpers/registerCommands.js';
-import intents from './config/init/intents.js';
+import { registerCommands } from './helpers/index.js';
 import mongoose from 'mongoose';
 import { UserModel } from './db/user.js';
 import startServer from './webServer/index.js';
